@@ -130,14 +130,18 @@ const scrollToTopButton = createScrollToTopButton();
 
 // Show/hide scroll to top button
 function handleScroll() {
+    const navbar = document.getElementById('navbar');
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    
+
     // Show/hide scroll to top button
     if (scrollTop > 300) {
         scrollToTopButton.classList.add('visible');
     } else {
         scrollToTopButton.classList.remove('visible');
     }
+
+    // Add a shadow to the navbar once the page is scrolled
+    navbar.classList.toggle('scrolled', scrollTop > 50);
 
     // Update active navigation link
     updateActiveNavLink();
