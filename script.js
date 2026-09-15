@@ -5,8 +5,9 @@ const navLinks = document.querySelectorAll('.nav-link');
 
 // Toggle mobile menu
 navToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
+    const isActive = navMenu.classList.toggle('active');
     navToggle.classList.toggle('active');
+    navToggle.setAttribute('aria-expanded', isActive);
 });
 
 // Close mobile menu when clicking on a nav link
@@ -14,6 +15,7 @@ navLinks.forEach(link => {
     link.addEventListener('click', () => {
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
     });
 });
 
@@ -126,9 +128,8 @@ function createScrollToTopButton() {
 
 const scrollToTopButton = createScrollToTopButton();
 
-// Show/hide scroll to top button and navbar background
+// Show/hide scroll to top button
 function handleScroll() {
-    const navbar = document.getElementById('navbar');
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     
     // Show/hide scroll to top button
@@ -137,16 +138,7 @@ function handleScroll() {
     } else {
         scrollToTopButton.classList.remove('visible');
     }
-    
-    // Add/remove navbar background blur effect
-    if (scrollTop > 50) {
-        navbar.style.background = 'rgba(29, 3, 3, 0.95)';
-        navbar.style.backdropFilter = 'blur(10px)';
-    } else {
-        navbar.style.background = 'rgba(21, 2, 2, 0.95)';
-        navbar.style.backdropFilter = 'blur(10px)';
-    }
-    
+
     // Update active navigation link
     updateActiveNavLink();
 }

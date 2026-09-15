@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     
-    <!-- Security Headers -->
+    <!-- Security Headers (only CSP and Referrer-Policy are honored via <meta>;
+         X-Frame-Options, X-Content-Type-Options, Strict-Transport-Security and
+         Permissions-Policy are HTTP-header-only and GitHub Pages can't set those
+         for a static site, so they're omitted rather than left as dead weight -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com *.google-analytics.com *.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com; font-src 'self' fonts.gstatic.com cdnjs.cloudflare.com; img-src 'self' data: *.google-analytics.com; connect-src 'self' *.google-analytics.com *.doubleclick.net;">
-    <meta http-equiv="X-Frame-Options" content="DENY">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains">
-    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     
     <title>Naren Viswanath - Senior Engineering Manager | AI/ML Expert</title>
@@ -20,7 +19,7 @@
     <link rel="canonical" href="https://narenviswanath.com/">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -54,7 +53,7 @@
       "sameAs": []
     }
     </script>
-    </head>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-G6MTLDDMP6"></script>
     <script>
@@ -80,11 +79,11 @@
                 <a href="#skills" class="nav-link">Skills</a>
                 <a href="#contact" class="nav-link">Contact</a>
             </div>
-            <div class="nav-toggle" id="nav-toggle">
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
-            </div>
+            </button>
         </div>
     </nav>
 
@@ -223,8 +222,8 @@
                         </div>
                         <div class="project-overlay">
                             <div class="project-links">
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                                <a href="#" class="project-link" aria-label="View Tiny LLM source on GitHub"><i class="fab fa-github"></i></a>
+                                <a href="#" class="project-link" aria-label="View Tiny LLM live demo"><i class="fas fa-external-link-alt"></i></a>
                             </div>
                         </div>
                     </div>
@@ -248,8 +247,8 @@
                         </div>
                         <div class="project-overlay">
                             <div class="project-links">
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                                <a href="#" class="project-link" aria-label="View Code Review MCP Server source on GitHub"><i class="fab fa-github"></i></a>
+                                <a href="#" class="project-link" aria-label="View Code Review MCP Server live demo"><i class="fas fa-external-link-alt"></i></a>
                             </div>
                         </div>
                     </div>
@@ -274,8 +273,8 @@
                         </div>
                         <div class="project-overlay">
                             <div class="project-links">
-                                <a href="#" class="project-link"><i class="fab fa-github"></i></a>
-                                <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i></a>
+                                <a href="#" class="project-link" aria-label="View AI Knowledge Assistant source on GitHub"><i class="fab fa-github"></i></a>
+                                <a href="#" class="project-link" aria-label="View AI Knowledge Assistant live demo"><i class="fas fa-external-link-alt"></i></a>
                             </div>
                         </div>
                     </div>
@@ -408,10 +407,10 @@
                         </div>
                     </div>
                     <div class="social-links">
-                        <a href="https://github.com/chocoobar" class="social-link"><i class="fab fa-github"></i></a>
-                        <a href="https://in.linkedin.com/in/narenviswa" class="social-link"><i class="fab fa-linkedin"></i></a>
-                        <a href="https://x.com/narenviswa" class="social-link"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/narenviswa" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="https://github.com/chocoobar" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://in.linkedin.com/in/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://x.com/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
                 <form class="contact-form">
@@ -437,7 +436,7 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2025 Naren Viswanath. All rights reserved.</p>
+                <p>&copy; 2026 Naren Viswanath. All rights reserved.</p>
                 <p>Built with ❤️ and hosted on GitHub Pages</p>
             </div>
         </div>
