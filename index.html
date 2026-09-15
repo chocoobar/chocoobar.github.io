@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    
+
     <!-- Security Headers (only CSP and Referrer-Policy are honored via <meta>;
          X-Frame-Options, X-Content-Type-Options, Strict-Transport-Security and
          Permissions-Policy are HTTP-header-only and GitHub Pages can't set those
          for a static site, so they're omitted rather than left as dead weight -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com *.google-analytics.com *.googletagmanager.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com; font-src 'self' fonts.gstatic.com cdnjs.cloudflare.com; img-src 'self' data: *.google-analytics.com; connect-src 'self' *.google-analytics.com *.doubleclick.net;">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
-    
+
     <title>Naren Viswanath - Senior Engineering Manager | AI/ML Expert</title>
     <meta name="description" content="Senior Engineering Manager specializing in AI/ML engineering, team leadership, and enterprise Java applications. Expert in GitHub Copilot, Claude, and modern AI platforms">
     <meta name="keywords" content="Senior Engineering Manager, AI/ML Engineering, Java, Spring Boot, GitHub Copilot, Team Leadership, Enterprise Applications">
     <meta name="author" content="Naren Viswanath">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://narenviswanath.com/">
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://narenviswanath.com/">
@@ -38,8 +38,8 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
     <!-- Schema.org for Google -->
     <script type="application/ld+json">
     {
@@ -65,11 +65,18 @@
     </script>
 </head>
 <body>
+    <!-- Scroll progress -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- Custom cursor (enabled only on fine-pointer, motion-friendly devices) -->
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <a href="#home" aria-label="Naren Viswanath - home">
+                <a href="#home" aria-label="Naren Viswanath - home" data-magnetic data-magnetic-strength="0.25">
                     <svg class="logo-mark" viewBox="0 0 44 44" role="img" aria-hidden="true">
                         <defs>
                             <linearGradient id="logoGradient" x1="0" y1="0" x2="1" y2="1">
@@ -78,7 +85,7 @@
                             </linearGradient>
                         </defs>
                         <rect x="1.5" y="1.5" width="41" height="41" rx="11" fill="none" stroke="url(#logoGradient)" stroke-width="2"/>
-                        <text x="22" y="29" font-family="Inter, sans-serif" font-weight="700" font-size="16" fill="url(#logoGradient)" text-anchor="middle">NV</text>
+                        <text x="22" y="29" font-family="Space Grotesk, Inter, sans-serif" font-weight="700" font-size="16" fill="url(#logoGradient)" text-anchor="middle">NV</text>
                     </svg>
                     <span class="nav-logo-text">Naren Viswanath</span>
                 </a>
@@ -102,66 +109,91 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-container">
+            <p class="hero-eyebrow reveal" data-reveal>
+                <span class="eyebrow-dot" aria-hidden="true"></span>
+                Senior Engineering Manager
+            </p>
             <div class="hero-content">
                 <div class="hero-text">
                     <h1 class="hero-title">
-                        Hi, I'm <span class="highlight">Naren Viswanath</span>
+                        <span class="reveal-line"><span class="reveal-inner">Hi, I&rsquo;m</span></span>
+                        <span class="reveal-line"><span class="reveal-inner highlight">Naren Viswanath</span></span>
                     </h1>
-                    <h2 class="hero-subtitle">Senior Engineering Manager</h2>
-                    <p class="hero-description">
+                    <p class="hero-description reveal" data-reveal>
                         I specialize in AI/ML engineering, leading teams in developing cutting-edge solutions with a focus on AI tools and enterprise Java applications.
                     </p>
-                    <div class="hero-buttons">
-                        <a href="#projects" class="btn btn-primary">View My Work</a>
-                        <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                    <div class="hero-buttons reveal" data-reveal>
+                        <a href="#projects" class="btn btn-primary" data-magnetic>
+                            <span>View My Work</span>
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                        <a href="#contact" class="btn btn-secondary" data-magnetic>
+                            <span>Get In Touch</span>
+                        </a>
                     </div>
                 </div>
-                <div class="hero-image">
-                    <img src="assets/images/hero-image.jpg" alt="Naren Viswanath - Senior Engineering Manager and AI/ML Expert" class="profile-image" loading="lazy">
-                </div>
-            </div>
-            <div class="scroll-indicator">
-                <div class="mouse">
-                    <div class="wheel"></div>
+                <div class="hero-image reveal" data-reveal>
+                    <div class="hero-image-frame">
+                        <img src="assets/images/hero-image.jpg" alt="Naren Viswanath - Senior Engineering Manager and AI/ML Expert" class="profile-image" id="parallaxImage" loading="lazy">
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="hero-marquee" aria-hidden="true">
+            <div class="marquee-track">
+                <span class="marquee-item">AI / ML Engineering</span>
+                <span class="marquee-item">Team Leadership</span>
+                <span class="marquee-item">Enterprise Java</span>
+                <span class="marquee-item">Spring Boot</span>
+                <span class="marquee-item">AI / ML Engineering</span>
+                <span class="marquee-item">Team Leadership</span>
+                <span class="marquee-item">Enterprise Java</span>
+                <span class="marquee-item">Spring Boot</span>
+            </div>
+        </div>
+
+        <a href="#about" class="scroll-cue">
+            <span class="scroll-cue-line" aria-hidden="true"></span>
+            <span class="scroll-cue-text">Scroll</span>
+        </a>
     </section>
 
     <!-- About Section -->
     <section id="about" class="about">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">About Me</h2>
-                <p class="section-subtitle">Get to know me better</p>
+                <span class="section-index reveal" data-reveal>01</span>
+                <h2 class="section-title reveal" data-reveal>About Me</h2>
+                <p class="section-subtitle reveal" data-reveal>Get to know me better</p>
             </div>
             <div class="about-content">
-                <div class="about-text">
+                <div class="about-text reveal" data-reveal>
                     <p>
-                        I'm a Senior Engineering Manager with deep expertise in AI/ML technologies and enterprise Java applications. 
+                        I'm a Senior Engineering Manager with deep expertise in AI/ML technologies and enterprise Java applications.
                         I specialize in leading teams that build innovative AI tools and scalable solutions using cutting-edge technologies.
                     </p>
                     <p>
-                        My expertise spans across modern AI platforms like GitHub Copilot, Claude, and Cursor, as well as 
-                        traditional enterprise technologies like Java and Spring Boot. I'm passionate about leveraging AI to solve 
+                        My expertise spans across modern AI platforms like GitHub Copilot, Claude, and Cursor, as well as
+                        traditional enterprise technologies like Java and Spring Boot. I'm passionate about leveraging AI to solve
                         complex engineering challenges and improve developer productivity.
                     </p>
                     <div class="about-stats">
                         <div class="stat">
-                            <h3>50+</h3>
+                            <h3><span data-count="50">0</span>+</h3>
                             <p>Projects Completed</p>
                         </div>
                         <div class="stat">
-                            <h3>10+</h3>
+                            <h3><span data-count="10">0</span>+</h3>
                             <p>Years Experience</p>
                         </div>
                         <div class="stat">
-                            <h3>100+</h3>
+                            <h3><span data-count="100">0</span>+</h3>
                             <p>Happy Clients</p>
                         </div>
                     </div>
                 </div>
-                <div class="about-image">
+                <div class="about-image reveal" data-reveal>
                     <div class="image-placeholder">
                         <i class="fas fa-code"></i>
                     </div>
@@ -174,15 +206,19 @@
     <section id="experience" class="experience">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Work Experience</h2>
-                <p class="section-subtitle">My Professional Journey</p>
+                <span class="section-index reveal" data-reveal>02</span>
+                <h2 class="section-title reveal" data-reveal>Work Experience</h2>
+                <p class="section-subtitle reveal" data-reveal>My Professional Journey</p>
             </div>
             <div class="experience-timeline">
-                <div class="timeline-item">
+                <div class="timeline-item reveal" data-reveal>
+                    <span class="timeline-marker" aria-hidden="true"></span>
                     <div class="timeline-content">
-                        <h3 class="company">M2P Fintech</h3>
+                        <div class="timeline-top">
+                            <h3 class="company">M2P Fintech</h3>
+                            <p class="duration">2025 &mdash; Present</p>
+                        </div>
                         <p class="position">Senior Engineering Manager</p>
-                        <p class="duration">2025 - Present</p>
                         <ul class="achievements">
                             <li>Leading the development of AI-powered developer tools and productivity solutions in the Org</li>
                             <li>Managing teams working on GitHub Copilot integration and custom LLM implementations</li>
@@ -191,11 +227,14 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal" data-reveal>
+                    <span class="timeline-marker" aria-hidden="true"></span>
                     <div class="timeline-content">
-                        <h3 class="company">M2P Fintech</h3>
+                        <div class="timeline-top">
+                            <h3 class="company">M2P Fintech</h3>
+                            <p class="duration">2017 &mdash; 2025</p>
+                        </div>
                         <p class="position">Technical Lead</p>
-                        <p class="duration">2017 - 2025</p>
                         <ul class="achievements">
                             <li>Led the development of  Credit Card stack</li>
                             <li>Lead the development of Debit Card stack</li>
@@ -205,11 +244,14 @@
                     </div>
                 </div>
 
-                <div class="timeline-item">
+                <div class="timeline-item reveal" data-reveal>
+                    <span class="timeline-marker" aria-hidden="true"></span>
                     <div class="timeline-content">
-                        <h3 class="company">IBM</h3>
+                        <div class="timeline-top">
+                            <h3 class="company">IBM</h3>
+                            <p class="duration">2015 &mdash; 2016</p>
+                        </div>
                         <p class="position">Associate Software Engineer</p>
-                        <p class="duration">2015 - 2016</p>
                         <ul class="achievements">
                             <li>Contributed to Citizens bank, ALDO, National Bank of Canada</li>
                         </ul>
@@ -223,11 +265,13 @@
     <section id="projects" class="projects">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">My Projects</h2>
-                <p class="section-subtitle">Here are some of my recent works</p>
+                <span class="section-index reveal" data-reveal>03</span>
+                <h2 class="section-title reveal" data-reveal>My Projects</h2>
+                <p class="section-subtitle reveal" data-reveal>Here are some of my recent works</p>
             </div>
             <div class="projects-grid">
-                <div class="project-card">
+                <div class="project-card reveal" data-reveal>
+                    <span class="project-index" aria-hidden="true">01</span>
                     <div class="project-image">
                         <div class="image-placeholder">
                             <i class="fas fa-laptop-code"></i>
@@ -252,7 +296,8 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal" data-reveal>
+                    <span class="project-index" aria-hidden="true">02</span>
                     <div class="project-image">
                         <div class="image-placeholder">
                             <i class="fas fa-mobile-alt"></i>
@@ -278,7 +323,8 @@
                     </div>
                 </div>
 
-                <div class="project-card">
+                <div class="project-card reveal" data-reveal>
+                    <span class="project-index" aria-hidden="true">03</span>
                     <div class="project-image">
                         <div class="image-placeholder">
                             <i class="fas fa-chart-line"></i>
@@ -313,12 +359,13 @@
     <section id="skills" class="skills">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Skills & Technologies</h2>
-                <p class="section-subtitle">Technologies I work with</p>
+                <span class="section-index reveal" data-reveal>04</span>
+                <h2 class="section-title reveal" data-reveal>Skills &amp; Technologies</h2>
+                <p class="section-subtitle reveal" data-reveal>Technologies I work with</p>
             </div>
             <div class="skills-grid">
-                <div class="skill-category">
-                    <h3 class="category-title">Backend & Cloud</h3>
+                <div class="skill-category reveal" data-reveal>
+                    <h3 class="category-title">Backend &amp; Cloud</h3>
                     <div class="skills-list">
                         <div class="skill-item">
                             <i class="fab fa-java"></i>
@@ -339,8 +386,8 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h3 class="category-title">DevOps & CI/CD</h3>
+                <div class="skill-category reveal" data-reveal>
+                    <h3 class="category-title">DevOps &amp; CI/CD</h3>
                     <div class="skills-list">
                         <div class="skill-item">
                             <i class="fas fa-dharmachakra"></i>
@@ -357,7 +404,7 @@
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category reveal" data-reveal>
                     <h3 class="category-title">Tools</h3>
                     <div class="skills-list">
                         <div class="skill-item">
@@ -386,11 +433,12 @@
     <section id="contact" class="contact">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="section-subtitle">Let's work together on your next project</p>
+                <span class="section-index reveal" data-reveal>05</span>
+                <h2 class="section-title reveal" data-reveal>Get In Touch</h2>
+                <p class="section-subtitle reveal" data-reveal>Let's work together on your next project</p>
             </div>
             <div class="contact-content">
-                <div class="contact-info">
+                <div class="contact-info reveal" data-reveal>
                     <div class="contact-item">
                         <div class="contact-icon">
                             <i class="fas fa-envelope"></i>
@@ -419,13 +467,13 @@
                         </div>
                     </div>
                     <div class="social-links">
-                        <a href="https://github.com/chocoobar" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="https://in.linkedin.com/in/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                        <a href="https://x.com/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)"><i class="fab fa-twitter"></i></a>
-                        <a href="https://www.instagram.com/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://github.com/chocoobar" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-magnetic><i class="fab fa-github"></i></a>
+                        <a href="https://in.linkedin.com/in/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-magnetic><i class="fab fa-linkedin"></i></a>
+                        <a href="https://x.com/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)" data-magnetic><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/narenviswa" class="social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram" data-magnetic><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
-                <form class="contact-form">
+                <form class="contact-form reveal" data-reveal>
                     <div class="form-group">
                         <input type="text" id="name" name="name" placeholder="Your Name" required>
                     </div>
@@ -438,7 +486,9 @@
                     <div class="form-group">
                         <textarea id="message" name="message" placeholder="Your Message" rows="6" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
+                    <button type="submit" class="btn btn-primary" data-magnetic>
+                        <span>Send Message</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -449,7 +499,10 @@
         <div class="container">
             <div class="footer-content">
                 <p>&copy; 2026 Naren Viswanath. All rights reserved.</p>
-                <p>Built with ❤️ and hosted on GitHub Pages</p>
+                <div class="footer-right">
+                    <p>Built with ❤️ and hosted on GitHub Pages</p>
+                    <a href="#home" class="footer-top">Back to top</a>
+                </div>
             </div>
         </div>
     </footer>

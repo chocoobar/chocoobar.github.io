@@ -2,6 +2,8 @@
 const navToggle = document.getElementById('nav-toggle');
 const navMenu = document.getElementById('nav-menu');
 const navLinks = document.querySelectorAll('.nav-link');
+const navbar = document.getElementById('navbar');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Toggle mobile menu
 navToggle.addEventListener('click', () => {
@@ -19,19 +21,19 @@ navLinks.forEach(link => {
     });
 });
 
-// Smooth scrolling for navigation links
+// Smooth scrolling for navigation links (accounts for the fixed navbar height)
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetId = link.getAttribute('href');
         const targetSection = document.querySelector(targetId);
-        
+
         if (targetSection) {
-            const offsetTop = targetSection.offsetTop - 70; // Account for fixed navbar
-            
+            const offsetTop = targetSection.offsetTop - 70;
+
             window.scrollTo({
                 top: offsetTop,
-                behavior: 'smooth'
+                behavior: prefersReducedMotion ? 'auto' : 'smooth'
             });
         }
     });
@@ -40,18 +42,16 @@ navLinks.forEach(link => {
 // Update active navigation link based on scroll position
 function updateActiveNavLink() {
     const sections = document.querySelectorAll('section');
-    const scrollPos = window.scrollY + 100; // Offset for better detection
-    
+    const scrollPos = window.scrollY + 100;
+
     sections.forEach(section => {
         const top = section.offsetTop - 100;
         const bottom = top + section.offsetHeight;
         const id = section.getAttribute('id');
         const correspondingNavLink = document.querySelector(`.nav-link[href="#${id}"]`);
-        
+
         if (scrollPos >= top && scrollPos <= bottom) {
-            // Remove active class from all nav links
             navLinks.forEach(link => link.classList.remove('active'));
-            // Add active class to current nav link
             if (correspondingNavLink) {
                 correspondingNavLink.classList.add('active');
             }
@@ -63,7 +63,7 @@ function updateActiveNavLink() {
 function scrollToTop() {
     window.scrollTo({
         top: 0,
-        behavior: 'smooth'
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
     });
 }
 
@@ -73,114 +73,220 @@ function createScrollToTopButton() {
     scrollButton.innerHTML = '<i class="fas fa-chevron-up"></i>';
     scrollButton.className = 'scroll-to-top';
     scrollButton.setAttribute('aria-label', 'Scroll to top');
-    
-    // Styling for the scroll button
+
     const style = document.createElement('style');
     style.textContent = `
         .scroll-to-top {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: #6366f1;
-            color: white;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            background: #74c0fc;
+            color: #04101c;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s ease;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            font-size: 1.2rem;
+            box-shadow: 0 10px 25px rgba(116, 192, 252, 0.25);
+            font-size: 1.1rem;
         }
-        
+
         .scroll-to-top:hover {
-            background: #4f46e5;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 12px 30px rgba(116, 192, 252, 0.4);
+            transform: translateY(-2px);
         }
-        
+
         .scroll-to-top.visible {
             opacity: 1;
             visibility: visible;
+            transform: translateY(0);
         }
-        
+
         @media (max-width: 768px) {
             .scroll-to-top {
-                bottom: 15px;
-                right: 15px;
-                width: 45px;
-                height: 45px;
+                bottom: 16px;
+                right: 16px;
+                width: 44px;
+                height: 44px;
                 font-size: 1rem;
             }
         }
     `;
-    
+
     document.head.appendChild(style);
     document.body.appendChild(scrollButton);
-    
+
     scrollButton.addEventListener('click', scrollToTop);
-    
+
     return scrollButton;
 }
 
 const scrollToTopButton = createScrollToTopButton();
 
-// Show/hide scroll to top button
+// Scroll progress bar + hero parallax elements
+const scrollProgress = document.getElementById('scrollProgress');
+const parallaxImage = document.getElementById('parallaxImage');
+const heroSection = document.querySelector('.hero');
+
+// Handle scroll: navbar shadow, scroll-to-top visibility, progress bar, parallax, active link
 function handleScroll() {
-    const navbar = document.getElementById('navbar');
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-    // Show/hide scroll to top button
     if (scrollTop > 300) {
         scrollToTopButton.classList.add('visible');
     } else {
         scrollToTopButton.classList.remove('visible');
     }
 
-    // Add a shadow to the navbar once the page is scrolled
     navbar.classList.toggle('scrolled', scrollTop > 50);
 
-    // Update active navigation link
+    if (scrollProgress) {
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        scrollProgress.style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    if (parallaxImage && heroSection && !prefersReducedMotion) {
+        const heroHeight = heroSection.offsetHeight;
+        if (scrollTop < heroHeight) {
+            parallaxImage.style.transform = `translateY(${scrollTop * 0.12}px)`;
+        }
+    }
+
     updateActiveNavLink();
 }
 
-// Scroll animations for elements
-function initScrollAnimations() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
+// Reveal-on-scroll system: staggers siblings sharing a parent via --reveal-i
+function initRevealAnimations() {
+    const revealEls = document.querySelectorAll('[data-reveal]');
+    const indexByParent = new Map();
+
+    revealEls.forEach(el => {
+        const parent = el.parentElement;
+        const i = indexByParent.get(parent) || 0;
+        el.style.setProperty('--reveal-i', i);
+        indexByParent.set(parent, i + 1);
+    });
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
             }
         });
-    }, observerOptions);
-    
-    // Add animation classes to elements
-    const animationElements = [
-        { selector: '.section-header', class: 'fade-in' },
-        { selector: '.hero-text', class: 'slide-in-left' },
-        { selector: '.hero-image', class: 'slide-in-right' },
-        { selector: '.about-text', class: 'slide-in-left' },
-        { selector: '.about-image', class: 'slide-in-right' },
-        { selector: '.project-card', class: 'fade-in' },
-        { selector: '.skill-category', class: 'fade-in' },
-        { selector: '.contact-info', class: 'slide-in-left' },
-        { selector: '.contact-form', class: 'slide-in-right' }
-    ];
-    
-    animationElements.forEach(({ selector, class: animationClass }) => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach((element, index) => {
-            element.classList.add(animationClass);
-            element.style.animationDelay = `${index * 0.1}s`;
-            observer.observe(element);
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+}
+
+// Hero headline line-reveal, triggered shortly after load
+function initHeroIntro() {
+    if (!heroSection) return;
+    window.requestAnimationFrame(() => {
+        setTimeout(() => heroSection.classList.add('is-loaded'), 120);
+    });
+}
+
+// Animate the About stats counting up once visible
+function initCountUp() {
+    const counters = document.querySelectorAll('[data-count]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            const target = parseInt(el.getAttribute('data-count'), 10) || 0;
+            observer.unobserve(el);
+
+            if (prefersReducedMotion) {
+                el.textContent = target;
+                return;
+            }
+
+            const duration = 1200;
+            const start = performance.now();
+
+            function tick(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(eased * target);
+                if (progress < 1) requestAnimationFrame(tick);
+            }
+
+            requestAnimationFrame(tick);
+        });
+    }, { threshold: 0.5 });
+
+    counters.forEach(el => observer.observe(el));
+}
+
+// Custom cursor: a lagging ring + a tight dot, desktop/fine-pointer only
+function initCustomCursor() {
+    const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (prefersReducedMotion || !supportsHover) return;
+
+    const dot = document.getElementById('cursorDot');
+    const ring = document.getElementById('cursorRing');
+    if (!dot || !ring) return;
+
+    document.documentElement.classList.add('has-custom-cursor');
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+    let started = false;
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+        if (!started) {
+            started = true;
+            document.documentElement.classList.add('cursor-active');
+        }
+    });
+
+    function animateRing() {
+        ringX += (mouseX - ringX) * 0.18;
+        ringY += (mouseY - ringY) * 0.18;
+        ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%)`;
+        requestAnimationFrame(animateRing);
+    }
+    requestAnimationFrame(animateRing);
+
+    const hoverTargets = document.querySelectorAll('a, button, .project-card, .skill-item');
+    hoverTargets.forEach(el => {
+        el.addEventListener('mouseenter', () => document.documentElement.classList.add('cursor-hover'));
+        el.addEventListener('mouseleave', () => document.documentElement.classList.remove('cursor-hover'));
+    });
+}
+
+// Magnetic buttons: gently pull elements marked [data-magnetic] toward the cursor
+function initMagneticElements() {
+    const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (prefersReducedMotion || !supportsHover) return;
+
+    const magneticEls = document.querySelectorAll('[data-magnetic]');
+
+    magneticEls.forEach(el => {
+        const strength = parseFloat(el.getAttribute('data-magnetic-strength')) || 0.35;
+
+        el.addEventListener('mousemove', (e) => {
+            const rect = el.getBoundingClientRect();
+            const relX = e.clientX - (rect.left + rect.width / 2);
+            const relY = e.clientY - (rect.top + rect.height / 2);
+            el.style.transform = `translate(${relX * strength}px, ${relY * strength}px)`;
+        });
+
+        el.addEventListener('mouseleave', () => {
+            el.style.transform = 'translate(0, 0)';
         });
     });
 }
@@ -188,42 +294,39 @@ function initScrollAnimations() {
 // Contact form handling
 function initContactForm() {
     const contactForm = document.querySelector('.contact-form');
-    
+
     if (contactForm) {
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            // Get form data
+
             const formData = new FormData(contactForm);
             const name = formData.get('name');
             const email = formData.get('email');
             const subject = formData.get('subject');
             const message = formData.get('message');
-            
-            // Simple form validation
+
             if (!name || !email || !subject || !message) {
                 showNotification('Please fill in all fields.', 'error');
                 return;
             }
-            
-            // Email validation
+
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 showNotification('Please enter a valid email address.', 'error');
                 return;
             }
-            
-            // Simulate form submission (replace with actual form handling)
+
             const submitButton = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitButton.textContent;
-            
-            submitButton.textContent = 'Sending...';
+            const submitLabel = submitButton.querySelector('span');
+            const originalText = submitLabel.textContent;
+
+            submitLabel.textContent = 'Sending...';
             submitButton.disabled = true;
-            
+
             setTimeout(() => {
                 showNotification('Thank you! Your message has been sent successfully.', 'success');
                 contactForm.reset();
-                submitButton.textContent = originalText;
+                submitLabel.textContent = originalText;
                 submitButton.disabled = false;
             }, 2000);
         });
@@ -232,49 +335,47 @@ function initContactForm() {
 
 // Notification system
 function showNotification(message, type = 'info') {
-    // Remove existing notification if any
     const existingNotification = document.querySelector('.notification');
     if (existingNotification) {
         existingNotification.remove();
     }
-    
+
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
-    
-    // Styling for notifications
+
     const notificationStyles = `
         .notification {
             position: fixed;
             top: 90px;
             right: 20px;
             padding: 1rem 1.5rem;
-            border-radius: 8px;
-            color: white;
+            border-radius: 10px;
+            color: #04101c;
             font-weight: 500;
-            z-index: 1001;
-            transform: translateX(100%);
+            z-index: 1400;
+            transform: translateX(120%);
             transition: transform 0.3s ease;
             max-width: 300px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
         }
-        
+
         .notification-success {
-            background: #10b981;
+            background: #4ade80;
         }
-        
+
         .notification-error {
-            background: #ef4444;
+            background: #f87171;
         }
-        
+
         .notification-info {
-            background: #6366f1;
+            background: #74c0fc;
         }
-        
+
         .notification.show {
             transform: translateX(0);
         }
-        
+
         @media (max-width: 768px) {
             .notification {
                 top: 80px;
@@ -284,23 +385,20 @@ function showNotification(message, type = 'info') {
             }
         }
     `;
-    
-    // Add styles if they don't exist
+
     if (!document.querySelector('#notification-styles')) {
         const styleSheet = document.createElement('style');
         styleSheet.id = 'notification-styles';
         styleSheet.textContent = notificationStyles;
         document.head.appendChild(styleSheet);
     }
-    
+
     document.body.appendChild(notification);
-    
-    // Trigger animation
+
     setTimeout(() => {
         notification.classList.add('show');
     }, 100);
-    
-    // Auto remove after 5 seconds
+
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => {
@@ -309,135 +407,24 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// Typing effect for hero title
-function initTypingEffect() {
-    const heroTitle = document.querySelector('.hero-title');
-    if (!heroTitle) return;
-    
-    const originalText = heroTitle.innerHTML;
-    const nameSpan = heroTitle.querySelector('.highlight');
-    
-    if (nameSpan) {
-        const nameText = nameSpan.textContent;
-        const beforeName = originalText.split('<span class="highlight">')[0];
-        const afterName = '</span>';
-        
-        let currentText = '';
-        let currentIndex = 0;
-        let isTypingName = false;
-        
-        heroTitle.innerHTML = beforeName + '<span class="highlight"></span>';
-        const highlightSpan = heroTitle.querySelector('.highlight');
-        
-        function typeText() {
-            if (!isTypingName && currentIndex < beforeName.length) {
-                // Typing text before the name
-                if (beforeName[currentIndex] === '<') {
-                    // Skip HTML tags
-                    const tagEnd = beforeName.indexOf('>', currentIndex);
-                    currentText += beforeName.substring(currentIndex, tagEnd + 1);
-                    currentIndex = tagEnd + 1;
-                } else {
-                    currentText += beforeName[currentIndex];
-                    currentIndex++;
-                }
-            } else if (!isTypingName) {
-                // Start typing the name
-                isTypingName = true;
-                currentIndex = 0;
-            } else if (currentIndex < nameText.length) {
-                // Typing the name
-                highlightSpan.textContent += nameText[currentIndex];
-                currentIndex++;
-            } else {
-                // Typing complete
-                return;
-            }
-            
-            if (!isTypingName) {
-                heroTitle.innerHTML = currentText + '<span class="highlight"></span>';
-            }
-            
-            setTimeout(typeText, 100);
-        }
-        
-        // Start typing effect after a short delay
-        setTimeout(typeText, 1000);
-    }
-}
-
-// Skill items hover effect
-function initSkillItemEffects() {
-    const skillItems = document.querySelectorAll('.skill-item');
-    
-    skillItems.forEach(item => {
-        item.addEventListener('mouseenter', () => {
-            // Add a subtle rotation animation
-            item.style.transform = 'translateY(-5px) rotate(2deg)';
-        });
-        
-        item.addEventListener('mouseleave', () => {
-            item.style.transform = 'translateY(0) rotate(0deg)';
-        });
-    });
-}
-
-// Project card image hover effects
-function initProjectCardEffects() {
-    const projectCards = document.querySelectorAll('.project-card');
-    
-    projectCards.forEach(card => {
-        const overlay = card.querySelector('.project-overlay');
-        const links = card.querySelectorAll('.project-link');
-        
-        card.addEventListener('mouseenter', () => {
-            // Animate project links
-            links.forEach((link, index) => {
-                setTimeout(() => {
-                    link.style.transform = 'scale(1) translateY(0)';
-                    link.style.opacity = '1';
-                }, index * 100);
-            });
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            links.forEach(link => {
-                link.style.transform = 'scale(0.8) translateY(10px)';
-                link.style.opacity = '0';
-            });
-        });
-        
-        // Initialize link states
-        links.forEach(link => {
-            link.style.transform = 'scale(0.8) translateY(10px)';
-            link.style.opacity = '0';
-            link.style.transition = 'all 0.3s ease';
-        });
-    });
-}
-
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all features
-    initScrollAnimations();
+    initHeroIntro();
+    initRevealAnimations();
+    initCountUp();
+    initCustomCursor();
+    initMagneticElements();
     initContactForm();
-    initSkillItemEffects();
-    initProjectCardEffects();
-    
-    // Set initial active nav link
+
     updateActiveNavLink();
 });
 
-// Handle scroll events
-window.addEventListener('scroll', handleScroll);
-
 // Handle resize events for responsive adjustments
 window.addEventListener('resize', () => {
-    // Close mobile menu on resize
     navMenu.classList.remove('active');
     navToggle.classList.remove('active');
-    
-    // Update active nav link
+    navToggle.setAttribute('aria-expanded', 'false');
+
     updateActiveNavLink();
 });
 
@@ -448,31 +435,30 @@ document.addEventListener('submit', (e) => {
     }
 });
 
-// Add some interactive features for better UX
+// Close mobile menu when clicking outside
 document.addEventListener('click', (e) => {
-    // Close mobile menu when clicking outside
     if (!navMenu.contains(e.target) && !navToggle.contains(e.target)) {
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
     }
 });
 
 // Keyboard navigation support
 document.addEventListener('keydown', (e) => {
-    // Close mobile menu with Escape key
     if (e.key === 'Escape') {
         navMenu.classList.remove('active');
         navToggle.classList.remove('active');
+        navToggle.setAttribute('aria-expanded', 'false');
     }
-    
-    // Scroll to top with Home key
+
     if (e.key === 'Home' && e.ctrlKey) {
         e.preventDefault();
         scrollToTop();
     }
 });
 
-// Performance optimization: Throttle scroll events
+// Performance optimization: throttle scroll events via requestAnimationFrame
 let ticking = false;
 
 function requestTick() {
@@ -485,6 +471,4 @@ function requestTick() {
     }
 }
 
-// Replace the direct scroll listener with throttled version
-window.removeEventListener('scroll', handleScroll);
 window.addEventListener('scroll', requestTick);
