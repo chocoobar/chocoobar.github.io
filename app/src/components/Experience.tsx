@@ -1,31 +1,32 @@
-import { ArrowRight } from 'lucide-react';
-
 import { Reveal } from '@/components/Reveal';
 import { SectionHeading } from '@/components/SectionHeading';
-import { experience } from '@/data/content';
-import { cn } from '@/lib/utils';
+import { experience, sectionCommands } from '@/data/content';
 
 export function Experience() {
   return (
-    <section id="experience" className="bg-secondary/30 py-24 md:py-36">
+    <section id="experience" className="border-t border-border bg-card/20 py-20 sm:py-28">
       <div className="container">
-        <SectionHeading index="02" title="Work Experience" subtitle="My Professional Journey" />
+        <SectionHeading command={sectionCommands.experience} title="Work Experience" subtitle="My Professional Journey" />
 
-        <div className="mx-auto max-w-3xl border-l border-border">
+        <div className="mx-auto max-w-3xl space-y-8">
           {experience.map((item, i) => (
-            <Reveal key={`${item.company}-${item.duration}`} index={i}>
-              <div className={cn('relative pl-8 md:pl-10', i === experience.length - 1 ? '' : 'pb-12')}>
-                <span className="absolute left-0 top-1.5 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-primary bg-background" />
-                <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-display text-xl font-bold">{item.company}</h3>
-                  <p className="text-sm font-semibold tracking-wide text-muted-foreground">{item.duration}</p>
+            <Reveal key={item.commit} index={i}>
+              <div className="rounded-md border border-border bg-card p-5 font-mono text-sm sm:p-6">
+                <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-border/70 pb-3">
+                  <span className="text-amber">commit {item.commit}</span>
+                  <span className="text-muted-foreground/60">·</span>
+                  <span className="text-muted-foreground">{item.duration}</span>
                 </div>
-                <p className="mb-4 font-medium text-primary">{item.role}</p>
-                <ul className="space-y-2.5">
+                <div className="mb-1 text-muted-foreground">
+                  Author: <span className="text-foreground">{item.company}</span>
+                </div>
+                <div className="mb-4 text-muted-foreground">
+                  Role: <span className="text-primary">{item.role}</span>
+                </div>
+                <ul className="space-y-2 pl-4">
                   {item.achievements.map((achievement) => (
-                    <li key={achievement} className="flex gap-2 text-muted-foreground">
-                      <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-primary" />
-                      <span>{achievement}</span>
+                    <li key={achievement} className="text-foreground/90 before:mr-2 before:text-primary before:content-['+']">
+                      {achievement}
                     </li>
                   ))}
                 </ul>

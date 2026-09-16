@@ -7,12 +7,20 @@ export const navItems = [
   { href: '#contact', label: 'Contact' },
 ] as const;
 
-export const marqueeItems = [
+export const tickerItems = [
   'AI / ML Engineering',
   'Team Leadership',
   'Enterprise Java',
   'Spring Boot',
 ];
+
+export const sectionCommands = {
+  about: 'cat about.md',
+  experience: 'ls -la ./experience',
+  projects: 'ls -la ./projects',
+  skills: 'cat package.json',
+  contact: './contact.sh --send',
+} as const;
 
 export const stats = [
   { value: 50, suffix: '+', label: 'Projects Completed' },
@@ -22,6 +30,7 @@ export const stats = [
 
 export const experience = [
   {
+    commit: 'a3f9c1d',
     company: 'M2P Fintech',
     role: 'Senior Engineering Manager',
     duration: '2025 — Present',
@@ -32,6 +41,7 @@ export const experience = [
     ],
   },
   {
+    commit: '7e2b4aa',
     company: 'M2P Fintech',
     role: 'Technical Lead',
     duration: '2017 — 2025',
@@ -43,6 +53,7 @@ export const experience = [
     ],
   },
   {
+    commit: '1c9d3f0',
     company: 'IBM',
     role: 'Associate Software Engineer',
     duration: '2015 — 2016',

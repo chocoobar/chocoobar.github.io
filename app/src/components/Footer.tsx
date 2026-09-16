@@ -1,14 +1,11 @@
 export function Footer() {
   return (
-    <footer className="border-t border-border bg-secondary/30 py-9">
-      <div className="container flex flex-wrap items-center justify-between gap-4">
-        <p className="text-sm text-muted-foreground">&copy; 2026 Naren Viswanath. All rights reserved.</p>
-        <div className="flex items-center gap-6">
-          <p className="text-sm text-muted-foreground">Built with ❤️ and hosted on GitHub Pages</p>
-          <a href="#home" className="text-sm font-semibold text-primary hover:underline">
-            Back to top
-          </a>
-        </div>
+    <footer className="border-t border-border bg-card/20 py-8">
+      <div className="container flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-muted-foreground">
+        <p>© 2026 Naren Viswanath — built with ❤ · hosted on GitHub Pages</p>
+        <a href="#home" className="text-primary transition-colors hover:text-primary/70">
+          <span className="text-muted-foreground">$</span> cd ~
+        </a>
       </div>
     </footer>
   );

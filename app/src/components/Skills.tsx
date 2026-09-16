@@ -15,7 +15,8 @@ import {
 
 import { Reveal } from '@/components/Reveal';
 import { SectionHeading } from '@/components/SectionHeading';
-import { skillGroups } from '@/data/content';
+import { TerminalWindow } from '@/components/TerminalWindow';
+import { sectionCommands, skillGroups } from '@/data/content';
 
 const iconMap: Record<string, LucideIcon> = {
   Java: Coffee,
@@ -31,35 +32,45 @@ const iconMap: Record<string, LucideIcon> = {
   Docker: Container,
 };
 
+function keyify(label: string) {
+  return label.toLowerCase().replace(/\s+/g, '-');
+}
+
 export function Skills() {
   return (
-    <section id="skills" className="bg-secondary/30 py-24 md:py-36">
+    <section id="skills" className="border-t border-border bg-card/20 py-20 sm:py-28">
       <div className="container">
-        <SectionHeading index="04" title="Skills & Technologies" subtitle="Technologies I work with" />
+        <SectionHeading command={sectionCommands.skills} title="Skills & Technologies" subtitle="Technologies I work with" />
 
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
-          {skillGroups.map((group, i) => (
-            <Reveal key={group.category} index={i}>
-              <div>
-                <h3 className="mb-6 text-center font-display text-xl font-bold">{group.category}</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {group.items.map((item) => {
-                    const Icon = iconMap[item] ?? Coffee;
-                    return (
-                      <div
-                        key={item}
-                        className="group flex flex-col items-center gap-2 rounded-xl border border-border bg-card px-4 py-6 transition-all duration-300 ease-spring hover:-translate-y-1 hover:border-primary"
-                      >
-                        <Icon className="h-7 w-7 text-primary transition-transform duration-300 group-hover:scale-110" />
-                        <span className="text-sm font-medium text-muted-foreground">{item}</span>
-                      </div>
-                    );
-                  })}
+        <Reveal index={0}>
+          <TerminalWindow title="package.json" className="mx-auto max-w-3xl" bodyClassName="p-6 sm:p-8">
+            <pre className="whitespace-pre-wrap font-mono text-sm leading-relaxed text-muted-foreground">
+              {'{\n'}
+              {skillGroups.map((group, gi) => (
+                <div key={group.category} className="pl-4">
+                  <span className="text-amber">&quot;{keyify(group.category)}&quot;</span>
+                  <span className="text-muted-foreground">: [</span>
+                  <div className="flex flex-wrap gap-2 py-2 pl-4">
+                    {group.items.map((item) => {
+                      const Icon = iconMap[item] ?? Coffee;
+                      return (
+                        <span
+                          key={item}
+                          className="inline-flex items-center gap-1.5 rounded border border-border bg-secondary/40 px-2.5 py-1 text-xs text-foreground transition-colors hover:border-primary hover:text-primary"
+                        >
+                          <Icon className="h-3.5 w-3.5" />
+                          {item}
+                        </span>
+                      );
+                    })}
+                  </div>
+                  <span className="text-muted-foreground">]{gi < skillGroups.length - 1 ? ',' : ''}</span>
                 </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+              ))}
+              {'}'}
+            </pre>
+          </TerminalWindow>
+        </Reveal>
       </div>
     </section>
   );

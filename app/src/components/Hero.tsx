@@ -1,91 +1,84 @@
-import { useEffect, useState } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 
+import { TerminalWindow } from '@/components/TerminalWindow';
 import { Button } from '@/components/ui/button';
 import { useMagnetic } from '@/hooks/useMagnetic';
 import { useParallax } from '@/hooks/useParallax';
-import { marqueeItems } from '@/data/content';
+import { useTypewriter } from '@/hooks/useTypewriter';
+import { tickerItems } from '@/data/content';
 import { cn } from '@/lib/utils';
 
 export function Hero() {
-  const [loaded, setLoaded] = useState(false);
-  const imageRef = useParallax<HTMLImageElement>(0.12);
+  const { output, done } = useTypewriter('Naren Viswanath', 45, 400);
+  const imageRef = useParallax<HTMLImageElement>(0.08);
   const primaryBtnRef = useMagnetic<HTMLAnchorElement>();
   const secondaryBtnRef = useMagnetic<HTMLAnchorElement>();
 
-  useEffect(() => {
-    const id = window.requestAnimationFrame(() => {
-      setTimeout(() => setLoaded(true), 120);
-    });
-    return () => window.cancelAnimationFrame(id);
-  }, []);
-
-  const loopedMarquee = [...marqueeItems, ...marqueeItems];
+  const loopedTicker = [...tickerItems, ...tickerItems];
 
   return (
-    <section id="home" className={cn('relative flex min-h-screen flex-col justify-center overflow-hidden pt-[70px]', loaded && 'hero-loaded')}>
+    <section id="home" className="relative flex min-h-screen flex-col justify-center pt-16">
       <div className="container">
-        <p className="mb-7 inline-flex items-center gap-2.5 font-display text-sm font-semibold uppercase tracking-[0.14em] text-primary">
-          <span className="h-[7px] w-[7px] rounded-full bg-primary shadow-[0_0_0_4px_hsl(var(--primary)/0.15)]" />
-          Senior Engineering Manager
-        </p>
+        <TerminalWindow title="naren@engineering — zsh" className="mx-auto max-w-4xl" status={<StatusPill />}>
+          <div className="grid gap-8 sm:grid-cols-[1fr_auto] sm:items-start">
+            <div>
+              <Line prompt="whoami" />
+              <p className="mb-6 mt-1.5 pl-5 font-display text-3xl font-bold leading-tight text-primary sm:text-4xl">
+                {output}
+                {!done && <span className="caret" aria-hidden="true" />}
+              </p>
 
-        <div className="grid items-center gap-16 lg:grid-cols-[1.2fr_1fr]">
-          <div>
-            <h1 className="mb-6 font-display text-[clamp(2.75rem,7.5vw,5.75rem)] font-bold leading-[0.98] tracking-tight">
-              <span className="reveal-line">
-                <span className="reveal-inner">Hi, I&rsquo;m</span>
-              </span>
-              <span className="reveal-line">
-                <span className="reveal-inner bg-gradient-to-r from-primary to-sky-400 bg-clip-text text-transparent">
-                  Naren Viswanath
-                </span>
-              </span>
-            </h1>
+              <div className={cn('transition-opacity duration-500', done ? 'opacity-100' : 'opacity-0')}>
+                <Line prompt="cat role.txt" />
+                <p className="mb-6 mt-1.5 pl-5 text-foreground">Senior Engineering Manager</p>
 
-            <p className="mb-9 max-w-[46ch] text-lg leading-relaxed text-muted-foreground">
-              I specialize in AI/ML engineering, leading teams in developing cutting-edge solutions with a focus on AI tools and enterprise Java applications.
-            </p>
+                <Line prompt="cat about.txt" />
+                <p className="mb-8 mt-1.5 max-w-[52ch] pl-5 leading-relaxed text-muted-foreground">
+                  I specialize in AI/ML engineering, leading teams in developing cutting-edge solutions with a focus
+                  on AI tools and enterprise Java applications.
+                </p>
 
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Button asChild size="lg">
-                <a ref={primaryBtnRef} href="#projects" className="group">
-                  <span>View My Work</span>
-                  <ArrowRight className="transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
-              </Button>
-              <Button asChild variant="secondary" size="lg">
-                <a ref={secondaryBtnRef} href="#contact">
-                  <span>Get In Touch</span>
-                </a>
-              </Button>
+                <div className="flex flex-col gap-3 pl-5 sm:flex-row">
+                  <Button asChild className="justify-start rounded-sm">
+                    <a ref={primaryBtnRef} href="#projects" className="group">
+                      <span className="text-muted-foreground">$</span>
+                      <span>open ./projects</span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1" />
+                    </a>
+                  </Button>
+                  <Button asChild variant="secondary" className="justify-start rounded-sm">
+                    <a ref={secondaryBtnRef} href="#contact">
+                      <span className="text-muted-foreground">$</span>
+                      <span>./contact --send</span>
+                    </a>
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="flex justify-center">
-            <div className="relative w-full max-w-[380px] rounded-[20px] bg-gradient-to-br from-primary/50 to-white/5 p-[3px]">
-              <span className="absolute -left-2 -top-2 h-[22px] w-[22px] border-l-2 border-t-2 border-primary/85" aria-hidden="true" />
-              <span className="absolute -bottom-2 -right-2 h-[22px] w-[22px] border-b-2 border-r-2 border-primary/85" aria-hidden="true" />
+            <div
+              className={cn(
+                'hidden overflow-hidden rounded border border-border transition-opacity duration-500 sm:block sm:w-40',
+                done ? 'opacity-100' : 'opacity-0',
+              )}
+            >
               <img
                 ref={imageRef}
                 src="/assets/images/hero-image.jpg"
                 alt="Naren Viswanath - Senior Engineering Manager and AI/ML Expert"
-                className="block w-full rounded-[18px] object-cover will-change-transform"
+                className="block h-full w-full object-cover will-change-transform"
                 loading="lazy"
               />
             </div>
           </div>
-        </div>
+        </TerminalWindow>
       </div>
 
-      <div className="mt-14 overflow-hidden border-y border-border py-4" aria-hidden="true">
-        <div className="flex w-max animate-marquee motion-reduce:animate-none">
-          {loopedMarquee.map((item, i) => (
-            <span
-              key={`${item}-${i}`}
-              className="relative whitespace-nowrap px-7 font-display text-base font-semibold uppercase tracking-[0.08em] text-muted-foreground/70 after:absolute after:-right-0.5 after:text-primary after:content-['•']"
-            >
-              {item}
+      <div className="mt-10 overflow-hidden border-y border-border/70 bg-card/40 py-3" aria-hidden="true">
+        <div className="flex w-max animate-ticker motion-reduce:animate-none">
+          {loopedTicker.map((item, i) => (
+            <span key={`${item}-${i}`} className="whitespace-nowrap px-6 font-mono text-xs text-muted-foreground">
+              <span className="text-primary">[OK]</span> {item}
             </span>
           ))}
         </div>
@@ -93,15 +86,28 @@ export function Hero() {
 
       <a
         href="#about"
-        className="absolute bottom-7 right-5 hidden flex-col items-center gap-2.5 text-muted-foreground no-underline sm:flex"
+        className="mx-auto mt-6 hidden items-center gap-1.5 font-mono text-xs text-muted-foreground no-underline transition-colors hover:text-primary sm:flex"
       >
-        <span className="text-[0.7rem] font-semibold uppercase tracking-[0.16em]" style={{ writingMode: 'vertical-rl' }}>
-          Scroll
-        </span>
-        <span className="relative h-[46px] w-px overflow-hidden bg-border">
-          <span className="absolute inset-x-0 -top-full h-full animate-scroll-cue bg-gradient-to-b from-transparent to-primary motion-reduce:animate-none" />
-        </span>
+        scroll
+        <ChevronDown className="h-3.5 w-3.5 animate-bounce" />
       </a>
     </section>
+  );
+}
+
+function Line({ prompt }: { prompt: string }) {
+  return (
+    <div className="font-mono text-sm text-muted-foreground">
+      <span className="text-primary">$</span> {prompt}
+    </div>
+  );
+}
+
+function StatusPill() {
+  return (
+    <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+      available
+    </div>
   );
 }

@@ -9,7 +9,7 @@ export default {
       center: true,
       padding: '1.25rem',
       screens: {
-        '2xl': '1200px',
+        '2xl': '1180px',
       },
     },
     extend: {
@@ -17,8 +17,9 @@ export default {
         spring: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['"Space Grotesk"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        display: ['"JetBrains Mono"', '"IBM Plex Mono"', 'ui-monospace', 'monospace'],
+        sans: ['"IBM Plex Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -54,6 +55,9 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        amber: {
+          DEFAULT: 'hsl(var(--amber))',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -69,20 +73,27 @@ export default {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
-        marquee: {
+        ticker: {
           from: { transform: 'translateX(0)' },
           to: { transform: 'translateX(-50%)' },
         },
-        'scroll-cue': {
-          '0%': { top: '-100%' },
-          '60%, 100%': { top: '100%' },
+        blink: {
+          '0%, 49%': { opacity: '1' },
+          '50%, 100%': { opacity: '0' },
+        },
+        flicker: {
+          '0%, 100%': { opacity: '0.98' },
+          '92%': { opacity: '0.98' },
+          '93%': { opacity: '0.85' },
+          '94%': { opacity: '0.98' },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        marquee: 'marquee 24s linear infinite',
-        'scroll-cue': 'scroll-cue 2.2s ease-in-out infinite',
+        ticker: 'ticker 28s linear infinite',
+        blink: 'blink 1s step-end infinite',
+        flicker: 'flicker 6s linear infinite',
       },
     },
   },

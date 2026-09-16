@@ -1,22 +1,27 @@
 import { Reveal } from '@/components/Reveal';
 
 interface Props {
-  index: string;
+  command: string;
   title: string;
   subtitle: string;
 }
 
-export function SectionHeading({ index, title, subtitle }: Props) {
+export function SectionHeading({ command, title, subtitle }: Props) {
   return (
-    <div className="mb-16 text-center">
+    <div className="mb-14">
       <Reveal index={0}>
-        <span className="mb-3 block font-display text-sm font-semibold tracking-[0.18em] text-primary">{index}</span>
+        <div className="mb-2 font-mono text-sm text-muted-foreground">
+          <span className="text-primary">$</span> {command}
+        </div>
       </Reveal>
       <Reveal index={1}>
-        <h2 className="mb-3 font-display text-[clamp(2rem,4vw,2.75rem)] font-bold tracking-tight">{title}</h2>
+        <h2 className="mb-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+          <span className="text-primary/70">## </span>
+          {title}
+        </h2>
       </Reveal>
       <Reveal index={2}>
-        <p className="text-lg text-muted-foreground">{subtitle}</p>
+        <p className="pl-0.5 text-muted-foreground">{subtitle}</p>
       </Reveal>
     </div>
   );

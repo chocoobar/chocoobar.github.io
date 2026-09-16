@@ -25,19 +25,15 @@ const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
       <a
         ref={ref}
         className={cn(
-          'group relative pb-1 text-sm font-semibold uppercase tracking-widest text-muted-foreground transition-colors duration-300 hover:text-foreground',
-          active && 'text-foreground',
+          'font-mono text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground',
+          active && 'text-primary hover:text-primary',
           className,
         )}
         {...props}
       >
+        <span className="text-muted-foreground/50">/</span>
         {label}
-        <span
-          className={cn(
-            'absolute -bottom-0.5 left-0 h-0.5 w-0 bg-gradient-to-r from-primary to-sky-400 transition-all duration-300 ease-spring group-hover:w-full',
-            active && 'w-full',
-          )}
-        />
+        {active && <span className="caret" aria-hidden="true" />}
       </a>
     );
   },
@@ -49,13 +45,13 @@ export function Navbar({ scrolled, activeId }: Props) {
     <nav
       className={cn(
         'fixed inset-x-0 top-0 z-[1000] border-b border-transparent transition-all duration-300',
-        scrolled && 'border-border/80 bg-background/85 shadow-[0_10px_30px_rgba(0,0,0,0.35)] backdrop-blur-xl',
+        scrolled && 'border-border bg-background/90 backdrop-blur-xl',
       )}
     >
-      <div className="container flex h-[70px] items-center justify-between">
+      <div className="container flex h-16 items-center justify-between">
         <Logo />
 
-        <div className="hidden items-center gap-9 md:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {navItems.map((item) => (
             <NavLink key={item.href} href={item.href} label={item.label} active={activeId === item.href.slice(1)} />
           ))}
@@ -67,7 +63,7 @@ export function Navbar({ scrolled, activeId }: Props) {
               <Menu className="h-5 w-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="top" className="rounded-b-2xl border-border">
+          <SheetContent side="top" className="border-border">
             <SheetTitle className="sr-only">Navigation menu</SheetTitle>
             <div className="flex flex-col items-center gap-7 py-8">
               {navItems.map((item) => (
